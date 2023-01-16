@@ -37,7 +37,7 @@ func InitServer(name string) ziface.IServer {
 func (s *Server) Start() {
 	log.Printf("[start] Server Listenner at IP %v:%v ,now is starting! \n", s.Ip, s.Port)
 	// 1. 获取地址
-	addr, err := net.ResolveTCPAddr(s.IpVersion, fmt.Sprintf("%s:%d", s.IpVersion, s.Port))
+	addr, err := net.ResolveTCPAddr(s.IpVersion, fmt.Sprintf("%s:%d", s.Ip, s.Port))
 	if err != nil {
 		log.Println("resolve tcp addr error :", err)
 		return
@@ -48,7 +48,7 @@ func (s *Server) Start() {
 		log.Printf("listen %v %v:", addr, err)
 		return
 	}
-	log.Printf("start Zinx server sucess,%v listenning at %v \n", s.Name, addr)
+	log.Printf("start Zinx Server sucess,%v listenning at %v \n", s.Name, addr)
 	// 3. 阻塞等待客户端连接,处理客户端连接连接（读写）
 	for { // 建立一个循环，如果有客户端过来，会阻塞返回
 		tcpConn, err := tcpListener.AcceptTCP()
@@ -66,6 +66,7 @@ func (s *Server) Start() {
 					log.Println("read msg err", err)
 					continue
 				}
+				log.Printf("recv client buf is %s ,cnt is %d,", msg, read)
 				// 回显功能
 				// write, err := tcpConn.Write(msg[:read]) // 回写信息切片
 				// if err != nil {
